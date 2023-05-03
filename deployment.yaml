@@ -57,6 +57,9 @@ spec:
             failureThreshold: 1
         - name: ${REPO_NAME}-app
           image: ${REGISTRY_HOST}/${REGISTRY_SPACE}/${REPO_NAME}-${BRANCH_NAME}:latest
+          envFrom:
+            - secretRef:
+                name: ${REPO_NAME}-secrets 
           ports:
             - containerPort: 3002
           imagePullPolicy: Always
