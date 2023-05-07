@@ -25,14 +25,9 @@ spec:
       containers:
         - name: sidecar
           image: ${REGISTRY_HOST}/${REGISTRY_SPACE}/sidecar-${BRANCH_NAME}:latest
-          env:
-            - name: ENCRYPTION_KEY_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: encryption
-                  key: ENCRYPTION_KEY_SECRET
-            - name: MICRO_SERVICE_URL
-              value: "http://localhost:3002"
+          envFrom:
+            - secretRef:
+                name: ${REPO_NAME}-secrets
           ports:
             - containerPort: 3001
           imagePullPolicy: Always
