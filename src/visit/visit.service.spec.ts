@@ -2,12 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { VisitService } from './visit.service';
 import { TypeOrmTestingConfig } from '../shared/testing-utils/typeorm-testing-config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { VisitEntity } from './visit.entity';
+import { S3Service } from '../shared/aws/storage.service';
+import { ConfigService } from '@nestjs/config';
 import { SellerEntity } from '../seller/seller.entity';
 import { IdentificationEntity } from '../identification/identification.entity';
-import { VisitEntity } from './visit.entity';
 
 describe('VisitService', () => {
-  const entities = [VisitEntity];
+  const entities = [SellerEntity, IdentificationEntity, VisitEntity];
   let service: VisitService;
 
   beforeEach(async () => {
@@ -18,7 +20,7 @@ describe('VisitService', () => {
       };
     };
     const module: TestingModule = await Test.createTestingModule({
-      providers: [VisitService],
+      providers: [VisitService, S3Service, ConfigService],
       imports: [
         TypeOrmModule.forFeature(entities),
         TypeOrmModule.forRoot(options()),
