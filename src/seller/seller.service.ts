@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SellerEntity } from './seller.entity';
+import { generateNowDate, SellerEntity } from './seller.entity';
 import { QueryFailedError, Repository } from 'typeorm';
-import { 
-  BusinessError, 
-  BusinessLogicException 
+import {
+  BusinessError,
+  BusinessLogicException,
 } from '../shared/errors/business-errors';
-import { IdentificationDto } from '../identification/identification.dto';
 import { IdentificationEntity } from '../identification/identification.entity';
-import { plainToClass, plainToInstance } from 'class-transformer';
-import { CreateSellerDto, SellerDto } from './seller.dto';
+import { plainToInstance } from 'class-transformer';
+import { CreateSellerDto } from './seller.dto';
+import { IdentificationDto } from '../identification/identification.dto';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class SellerService {
@@ -31,11 +32,11 @@ export class SellerService {
     return await this.sellerRepository.find(options);
   }
 
-  async findOne(user_id: string, relations: boolean) {
+  async findOne(id: string, relations: boolean) {
     let seller: SellerEntity | undefined = undefined;
     try {
       seller = await this.sellerRepository.findOne({
-        where: { user_id },
+        where: { id },
         relations: relations ? ['identification', 'visits'] : [],
       });
     } catch (e) {
@@ -52,57 +53,56 @@ export class SellerService {
     return seller;
   }
 
-  async create(sellerDto: SellerDto) {
-    let identificationEntity = plainToInstance(
-      IdentificationEntity,
-      sellerDto.identification,
-    );
+  async create(sellerDto: CreateSellerDto) {
+    const identificationEntity = await this.identificationRepository.save({});
     const sellerEntity = plainToInstance(SellerEntity, sellerDto);
-    const existingSeller: SellerEntity =
-      await this.sellerRepository.findOne({
-        where: { user_id: sellerDto.user_id },
-      });
-    const existingIdSeller: SellerEntity =
-      await this.sellerRepository.findOne({
-        where: { identification: sellerDto.identification },
-      });      
-    if (existingSeller) {
-      throw new BusinessLogicException(
-        'Ya existe un vendedor con ese numero de usuario',
-        BusinessError.PRECONDITION_FAILED,
-      );
-    }    
-    if (existingIdSeller) {
-      throw new BusinessLogicException(
-        'Ya existe un vendedor con ese numero de identificación',
-        BusinessError.PRECONDITION_FAILED,
-      );
-    }
-    identificationEntity = await this.identificationRepository.save(
-      identificationEntity,
-    );
     sellerEntity.identification = identificationEntity;
-    return await this.sellerRepository.save(sellerEntity);           
-  }  
-
-  async update(
-    user_id: string,
-    seller: SellerEntity,
-  ): Promise<SellerEntity> {
-    const persistedSeller: SellerEntity =
-      await this.sellerRepository.findOne({
-        where: { user_id },
-      });
-    if (!persistedSeller) {
-      throw new BusinessLogicException(
-        'El vendedor con el user_id dado no fue encontrado',
-        BusinessError.NOT_FOUND,
-      );
+    try {
+      return await this.sellerRepository.save(sellerEntity);
+    } catch (e: any) {
+      throw new BusinessLogicException(e.message, BusinessError.BAD_REQUEST);
     }
-    return await this.sellerRepository.save({
-      ...persistedSeller,
-      ...seller,
-    });
   }
 
+  async update(id: string, obj: object) {
+    const newObj = {};
+    const sellerKeys = [
+      'first_name',
+      'last_name',
+      'sales_commission',
+      'status',
+      'updated_at',
+      'deleted_at',
+      'zone',
+      'identification',
+    ];
+    for (const key of Object.keys(obj)) {
+      if (sellerKeys.includes(key)) {
+        if (key === 'identification') {
+          const newIdentificationDto = plainToInstance(
+            IdentificationDto,
+            obj[key],
+          );
+          const errors = await validate(newIdentificationDto);
+          if (errors.length > 0) {
+            throw new BusinessLogicException(
+              'La estructura del objeto de identificación no es correcta.',
+              BusinessError.BAD_REQUEST,
+            );
+          }
+          newObj[key] = await this.identificationRepository.save(
+            newIdentificationDto,
+          );
+        } else {
+          newObj[key] = obj[key];
+        }
+      }
+    }
+    newObj['updated_at'] = generateNowDate();
+    await this.sellerRepository.update(id, newObj);
+    return await this.sellerRepository.findOne({
+      where: { id },
+      relations: ['identification'],
+    });
+  }
 }

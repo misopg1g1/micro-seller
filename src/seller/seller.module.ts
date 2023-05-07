@@ -11,11 +11,7 @@ import { VisitEntity } from 'src/visit/visit.entity';
   controllers: [SellerController],
   exports: [SellerService],
   imports: [
-    TypeOrmModule.forFeature([
-      SellerEntity,
-      IdentificationEntity,
-      VisitEntity,
-    ])
+    TypeOrmModule.forFeature([SellerEntity, IdentificationEntity, VisitEntity]),
   ],
 })
 export class SellerModule {}

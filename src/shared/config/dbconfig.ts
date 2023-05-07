@@ -9,6 +9,5 @@ export const dbCongif: object = {
   username: process.env.DB_USERNAME ? process.env.DB_USERNAME : 'postgres',
   password: process.env.DB_PASSWORD ? process.env.DB_PASSWORD : 'postgres',
   database: process.env.DB_NAME ? process.env.DB_NAME : 'postgres',
-  entities: [SellerEntity, VisitEntity, IdentificationEntity],
   synchronize: true,
 };

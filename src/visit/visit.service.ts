@@ -18,12 +18,6 @@ export class VisitService {
     private storageService: S3Service,
   ) {}
 
-  // async findAll(): Promise<VisitEntity[]> {
-  //   return await this.visitRepository.find({
-  //     relations: ['seller'],
-  //   });
-  // }
-
   async findAll(
     skip = 0,
     relations: boolean,
@@ -34,25 +28,9 @@ export class VisitService {
       options = { ...options, take: take };
     }
     return await this.visitRepository.find(options);
-  }  
+  }
 
-  // async findOne(id: string): Promise<VisitEntity> {
-  //   const visit: VisitEntity = await this.visitRepository.findOne({
-  //     where: { id },
-  //     relations: ['seller'],
-  //   });
-  //   if (!visit)
-  //     throw new BusinessLogicException(
-  //       'La visita con el id dado no fue encontrada',
-  //       BusinessError.NOT_FOUND,
-  //     );
-  //   return visit;
-  // }
-
-  async findOne(
-    id: string, 
-    relations: boolean
-    ): Promise<VisitEntity> {
+  async findOne(id: string, relations: boolean): Promise<VisitEntity> {
     let visit: VisitEntity | undefined = undefined;
     try {
       visit = await this.visitRepository.findOne({
@@ -73,15 +51,11 @@ export class VisitService {
     return visit;
   }
 
-  // async create(visit: VisitEntity): Promise<VisitEntity> {
-  //   return await this.visitRepository.save(visit);
-  // }
-
   async create(createVisitDto: VisitDto) {
     const base64Data: string = createVisitDto.img_base64_data;
     let [image_url, key] = [
       'https://kiranametro.com/admin/public/size_primary_images/no-image.jpg',
-      undefined,      
+      undefined,
     ];
     try {
       [image_url, key] = base64Data
@@ -97,7 +71,7 @@ export class VisitService {
       image_url,
     };
     delete visitObj.img_base64_data;
-    const visitEntity = plainToInstance(VisitEntity, visitObj);  
+    const visitEntity = plainToInstance(VisitEntity, visitObj);
     try {
       return await this.visitRepository.save(visitEntity);
     } catch (e) {
@@ -105,10 +79,10 @@ export class VisitService {
       if (e instanceof QueryFailedError) {
         throw new BusinessLogicException(e.message, BusinessError.BAD_REQUEST);
       }
-    }  
+    }
   }
 
-  async update(id: string, visit: VisitEntity): Promise<VisitEntity> {
+  async update(id: string, obj: object) {
     const persistedVisit: VisitEntity = await this.visitRepository.findOne({
       where: { id },
     });
@@ -117,9 +91,20 @@ export class VisitService {
         'La visita con el id dado no fue encontrada',
         BusinessError.NOT_FOUND,
       );
-    return await this.visitRepository.save({
-      ...persistedVisit,
-      ...visit,
+
+    const newObj = {};
+    const visitKeys = ['visit_date', 'image_url', 'description', 'order_id'];
+    for (const key of Object.keys(obj)) {
+      if (visitKeys.includes(key)) {
+        newObj[key] = obj[key];
+      }
+    }
+    if (Object.keys(newObj).length > 0) {
+      await this.visitRepository.update(id, newObj);
+    }
+
+    return await this.visitRepository.findOne({
+      where: { id },
     });
   }
 }

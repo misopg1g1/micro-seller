@@ -21,8 +21,14 @@ export class SellerVisitService {
     private visitService: VisitService,
   ) {}
 
-  async addVisitToSeller(user_id: string, visit_id: string): Promise<SellerEntity> {
-    const seller: SellerEntity = await this.sellerService.findOne(user_id, true);
+  async addVisitToSeller(
+    user_id: string,
+    visit_id: string,
+  ): Promise<SellerEntity> {
+    const seller: SellerEntity = await this.sellerService.findOne(
+      user_id,
+      true,
+    );
     if (!seller)
       throw new BusinessLogicException(
         'El vendedor con el user_id no fue encontrado',
@@ -39,7 +45,10 @@ export class SellerVisitService {
   }
 
   async findVisitsFromSeller(user_id: string): Promise<VisitEntity[]> {
-    const seller: SellerEntity = await this.sellerService.findOne(user_id, true);
+    const seller: SellerEntity = await this.sellerService.findOne(
+      user_id,
+      true,
+    );
     if (!seller)
       throw new BusinessLogicException(
         'El vendedor con el user_id dado no fue encontrado',
@@ -52,7 +61,10 @@ export class SellerVisitService {
     user_id: string,
     visit_id: string,
   ): Promise<VisitEntity> {
-    const seller: SellerEntity = await this.sellerService.findOne(user_id, true);
+    const seller: SellerEntity = await this.sellerService.findOne(
+      user_id,
+      true,
+    );
     if (!seller)
       throw new BusinessLogicException(
         'La visita con el id dado no fue encontrada',
@@ -62,8 +74,8 @@ export class SellerVisitService {
   }
 
   private findVisitInSeller(
-    visit_id: string, 
-    seller: SellerEntity
+    visit_id: string,
+    seller: SellerEntity,
   ): VisitEntity {
     const interestVisit: VisitEntity = seller.visits.find(
       (me) => me.id === visit_id,
