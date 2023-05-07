@@ -1,5 +1,11 @@
+import { 
+    Column, 
+    Entity, 
+    JoinColumn, 
+    ManyToOne, 
+    PrimaryGeneratedColumn 
+} from "typeorm";
 import { SellerEntity } from "src/seller/seller.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class VisitEntity {
@@ -14,5 +20,6 @@ export class VisitEntity {
     @Column()
     order_id: string;
     @ManyToOne(() => SellerEntity, seller => seller.visits)
+    @JoinColumn()
     seller: SellerEntity;
 }
