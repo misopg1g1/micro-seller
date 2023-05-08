@@ -1,9 +1,7 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
-  HttpCode,
   Param,
   Post,
   Put,
@@ -12,10 +10,8 @@ import {
 } from '@nestjs/common';
 import { BusinessErrorsInterceptor } from 'src/shared/interceptors/business-errors.interceptors';
 import { VisitService } from './visit.service';
-import { GetVisitDto, VisitDto } from './visit.dto';
-import { VisitEntity } from './visit.entity';
-import { plainToInstance } from 'class-transformer';
-import {ApiBody, ApiQuery} from '@nestjs/swagger';
+import { VisitDto } from './visit.dto';
+import { ApiBody, ApiQuery } from '@nestjs/swagger';
 
 @UseInterceptors(BusinessErrorsInterceptor)
 @Controller('visits')
@@ -35,12 +31,7 @@ export class VisitController {
     if (typeof relations === 'string') {
       transformedRelations = JSON.parse(relations.toLowerCase());
     }
-    const visits = await this.visitService.findAll(
-      skip,
-      transformedRelations,
-      take,
-    );
-    return plainToInstance(GetVisitDto, visits);
+    return await this.visitService.findAll(skip, transformedRelations, take);
   }
 
   @Get(':visit_id')
@@ -53,11 +44,7 @@ export class VisitController {
     if (typeof relations === 'string') {
       transformedRelations = JSON.parse(relations.toLowerCase());
     }
-    const visit = await this.visitService.findOne(
-      visit_id,
-      transformedRelations,
-    );
-    return plainToInstance(GetVisitDto, visit);
+    return await this.visitService.findOne(visit_id, transformedRelations);
   }
 
   @Post()
