@@ -44,7 +44,7 @@ export class VisitService {
     }
     if (!visit) {
       throw new BusinessLogicException(
-        'La visita con el id dado no fue encontrado',
+        'La visita con el id dado no fue encontrada',
         BusinessError.NOT_FOUND,
       );
     }
