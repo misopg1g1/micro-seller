@@ -29,9 +29,12 @@ export class VisitController {
   async findAll(
     @Query('skip') skip?: number,
     @Query('take') take?: number,
-    @Query('relations') relations = false,
+    @Query('relations') relations: any = false,
   ) {
-    const transformedRelations = JSON.parse(String(relations));
+    let transformedRelations = relations;
+    if (typeof relations === 'string') {
+      transformedRelations = JSON.parse(relations.toLowerCase());
+    }
     const visits = await this.visitService.findAll(
       skip,
       transformedRelations,
@@ -44,9 +47,12 @@ export class VisitController {
   @ApiQuery({ name: 'relations', required: false, type: Boolean })
   async findOne(
     @Param('visit_id') visit_id: string,
-    @Query('relations') relations = false,
+    @Query('relations') relations: any = false,
   ) {
-    const transformedRelations = JSON.parse(String(relations));
+    let transformedRelations = relations;
+    if (typeof relations === 'string') {
+      transformedRelations = JSON.parse(relations.toLowerCase());
+    }
     const visit = await this.visitService.findOne(
       visit_id,
       transformedRelations,
