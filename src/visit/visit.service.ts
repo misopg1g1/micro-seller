@@ -9,12 +9,17 @@ import { VisitEntity } from './visit.entity';
 import { S3Service } from 'src/shared/aws/storage.service';
 import { VisitDto } from './visit.dto';
 import { plainToInstance } from 'class-transformer';
+import { SellerService } from '../seller/seller.service';
+import { SellerEntity } from '../seller/seller.entity';
 
 @Injectable()
 export class VisitService {
   constructor(
     @InjectRepository(VisitEntity)
     private readonly visitRepository: Repository<VisitEntity>,
+    @InjectRepository(SellerEntity)
+    private readonly sellerRepository: Repository<SellerEntity>,
+    private readonly sellerService: SellerService,
     private storageService: S3Service,
   ) {}
 
@@ -44,7 +49,7 @@ export class VisitService {
     }
     if (!visit) {
       throw new BusinessLogicException(
-        'La visita con el id dado no fue encontrado',
+        'La visita con el id dado no fue encontrada',
         BusinessError.NOT_FOUND,
       );
     }
@@ -72,6 +77,10 @@ export class VisitService {
     };
     delete visitObj.img_base64_data;
     const visitEntity = plainToInstance(VisitEntity, visitObj);
+    visitEntity.seller = await this.sellerService.findOne(
+      createVisitDto.seller_id,
+      false,
+    );
     try {
       return await this.visitRepository.save(visitEntity);
     } catch (e) {

@@ -20,13 +20,13 @@ import { SellerVisitService } from './seller-visit.service';
 export class SellerVisitController {
   constructor(private readonly sellerVisitService: SellerVisitService) {}
 
-  @Post(':user_id/visits/:visit_id')
-  async addVisitSeller(
-    @Param('user_id') user_id: string,
-    @Param('visit_id') visit_id: string,
-  ) {
-    return await this.sellerVisitService.addVisitToSeller(user_id, visit_id);
-  }
+  // @Post(':user_id/visits/:visit_id')
+  // async addVisitSeller(
+  //   @Param('user_id') user_id: string,
+  //   @Param('visit_id') visit_id: string,
+  // ) {
+  //   return await this.sellerVisitService.addVisitToSeller(user_id, visit_id);
+  // }
 
   @Get(':user_id/visits/:visit_id')
   async findMemberFromClub(

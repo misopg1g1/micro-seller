@@ -71,8 +71,6 @@ export class SellerService {
       'last_name',
       'sales_commission',
       'status',
-      'updated_at',
-      'deleted_at',
       'zone',
       'identification',
     ];

@@ -19,6 +19,8 @@ export class VisitEntity {
   description: string;
   @Column()
   order_id: string;
+  @Column()
+  customer_id: string;
   @ManyToOne(() => SellerEntity, (seller) => seller.visits)
   @JoinColumn()
   seller: SellerEntity;
