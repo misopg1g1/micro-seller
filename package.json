@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "author": "",
+  "type": "commonjs",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -14,7 +15,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
+    "test": "jest --coverage",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -22,13 +23,18 @@
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
+    "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.1.2",
     "@nestjs/typeorm": "^9.0.1",
+    "aws-sdk": "^2.1368.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "faker": "^6.6.6",
+    "file-type": "^18.3.0",
+    "magic": "^2.3.5-alpha.1",
+    "mmmagic": "^0.5.3",
     "mysql2": "^2.3.3",
     "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
@@ -67,6 +73,9 @@
       "json",
       "ts"
     ],
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/$1"
+    },
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
