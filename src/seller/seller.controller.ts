@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiQuery } from '@nestjs/swagger';
 import { SellerService } from './seller.service';
-import { BusinessErrorsInterceptor } from 'src/shared/interceptors/business-errors.interceptors';
+import { BusinessErrorsInterceptor } from 'src/shared/interceptors/business-errors.interceptor';
 import { CreateSellerDto } from './seller.dto';
 import { SellerEntity } from './seller.entity';
 import { plainToInstance } from 'class-transformer';
