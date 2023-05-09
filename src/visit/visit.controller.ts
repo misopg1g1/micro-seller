@@ -8,7 +8,7 @@ import {
   Query,
   UseInterceptors,
 } from '@nestjs/common';
-import { BusinessErrorsInterceptor } from 'src/shared/interceptors/business-errors.interceptors';
+import { BusinessErrorsInterceptor } from 'src/shared/interceptors/business-errors.interceptor';
 import { VisitService } from './visit.service';
 import { VisitDto } from './visit.dto';
 import { ApiBody, ApiQuery } from '@nestjs/swagger';

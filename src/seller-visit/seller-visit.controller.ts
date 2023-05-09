@@ -12,7 +12,7 @@ import {
 import { plainToInstance } from 'class-transformer';
 import { VisitDto } from 'src/visit/visit.dto';
 import { VisitEntity } from 'src/visit/visit.entity';
-import { BusinessErrorsInterceptor } from 'src/shared/interceptors/business-errors.interceptors';
+import { BusinessErrorsInterceptor } from 'src/shared/interceptors/business-errors.interceptor';
 import { SellerVisitService } from './seller-visit.service';
 
 @Controller('sellers')
