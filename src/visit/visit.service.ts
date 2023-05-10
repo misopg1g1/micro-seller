@@ -102,10 +102,29 @@ export class VisitService {
       );
 
     const newObj = {};
-    const visitKeys = ['visit_date', 'image_url', 'description', 'order_id'];
-    for (const key of Object.keys(obj)) {
-      if (visitKeys.includes(key)) {
-        newObj[key] = obj[key];
+    const visitKeys = ['visit_date', 'image_url', 'description', 'order_id', 'img_base64_data'];
+    for (const key_present of Object.keys(obj)) {
+      if (visitKeys.includes(key_present)) {
+        if (key_present === 'img_base64_data') {
+          const base64Data: string = obj[key_present];
+          let [image_url, key] = [
+            'https://kiranametro.com/admin/public/size_primary_images/no-image.jpg',
+            undefined,
+          ];
+          console.log("a ver" , obj);
+          try {
+            [image_url, key] = base64Data
+              ? await this.storageService.uploadImage(base64Data)
+              : [image_url, undefined];
+          } catch (e) {
+            if (e instanceof BusinessLogicException) {
+              throw e;
+            }
+          }
+          newObj['image_url'] = image_url;
+        }
+        else
+          newObj[key_present] = obj[key_present];
       }
     }
     if (Object.keys(newObj).length > 0) {
