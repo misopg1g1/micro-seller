@@ -151,6 +151,23 @@ describe('VisitService', () => {
     expect(storedVisit.order_id).toEqual(visit.order_id);
   });
 
+  it('update should modify an existing visit with image', async () => {
+    const visit: VisitEntity = visitList[0];
+    const visitObj = {
+      "img_base64_data": "",
+      "order_id": "jjjj"};
+    const updatedVisit: VisitEntity = await service.update(
+      visit.id,
+      visitObj,
+    );
+    expect(updatedVisit).not.toBeNull();
+    const storedVisit: VisitEntity = await visitRepository.findOne({
+      where: { id: visit.id },
+    });
+    expect(storedVisit).not.toBeNull();
+    expect(updatedVisit.image_url).toEqual('https://kiranametro.com/admin/public/size_primary_images/no-image.jpg');
+  });
+
   it('update should modify throw an exception for an invalid visit', async () => {
     const visit: VisitEntity = visitList[0];
     visit.order_id = faker.datatype.uuid();
