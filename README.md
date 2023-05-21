@@ -1,73 +1,88 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Microservicio de NestJS
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este repositorio contiene un microservicio desarrollado con NestJS.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Requisitos previos
 
-## Description
+Antes de ejecutar el microservicio de NestJS, asegúrate de tener instalados los siguientes componentes:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Docker: [Descargar e instalar Docker](https://www.docker.com/get-started)
+- Node.js: [Descargar e instalar Node.js](https://nodejs.org)
 
-## Installation
+## Ejecutar el microservicio de NestJS localmente
 
-```bash
-$ npm install
-```
+Puedes ejecutar el microservicio de NestJS de dos formas: utilizando Docker Compose o configurando las variables de entorno manualmente.
 
-## Running the app
+### Opción 1: Ejecutar con Docker Compose
 
-```bash
-# development
-$ npm run start
+1. Asegúrate de tener el archivo `docker-compose.yml` en el directorio raíz del proyecto.
 
-# watch mode
-$ npm run start:dev
+2. Abre una terminal y navega hasta el directorio raíz del proyecto donde se encuentra el archivo `docker-compose.yml`.
 
-# production mode
-$ npm run start:prod
-```
+3. Abre el archivo `docker-compose.yml` y encuentra la sección `environment` dentro del servicio `micro-product-app`. Define los valores de las variables de entorno requeridas directamente en el archivo `docker-compose.yml`. Por ejemplo:
 
-## Test
+   ```yaml
+   environment:
+     - AWS_ACCESS_KEY_ID=your-access-key
+     - AWS_SECRET_ACCESS_KEY=your-secret-access-key
+     - DB_DIALECT=postgres
+     - DB_DRIVER=postgres
+     - DB_HOST=db
+     - DB_NAME=my-database
+     - DB_PASSWORD=db-password
+     - DB_PORT=5432
+     - DB_USERNAME=db-username
+     - ENCRYPTION_KEY_SECRET=encryption-key
+     - MICRO_SERVICE_URL=http://microservice-url
+     - S3_BUCKET_NAME=my-bucket
+   
+Asegurarse de reemplazar los valores de ejemplo con los valores correctos para tu aplicación y base de datos.
+
+4. Ejecuta el siguiente comando para construir las imágenes y ejecutar los contenedores:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+    docker-compose up
 ```
 
-## Support
+### Opción 2: Ejecutar localmente con variables de entorno
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+1. Asegúrate de tener el archivo .env en el directorio raíz del proyecto.
 
-## Stay in touch
+2. Abre el archivo .env y define los valores de las variables de entorno requeridas. Por ejemplo:
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```yaml
+   AWS_ACCESS_KEY_ID=your-access-key
+   AWS_SECRET_ACCESS_KEY=your-secret-access-key
+   DB_DIALECT=postgres
+   DB_DRIVER=postgres
+   DB_HOST=localhost
+   DB_NAME=my-database
+   DB_PASSWORD=db-password
+   DB_PORT=5432
+   DB_USERNAME=db-username
+   ENCRYPTION_KEY_SECRET=encryption-key
+   MICRO_SERVICE_URL=http://microservice-url
+   S3_BUCKET_NAME=my-bucket
+```
+Asegúrate de reemplazar los valores de ejemplo con los valores correctos para tu aplicación y base de datos.
 
-## License
+3. Abre una terminal y navega hasta el directorio raíz del proyecto donde se encuentra el archivo package.json.
 
-Nest is [MIT licensed](LICENSE).
+4. Ejecuta los siguientes comandos en secuencia:
+
+```
+npm install
+npm run build
+npm run start:dev
+```
+
+### Ejecutar pruebas con Jest
+
+1. Abre una terminal y navega hasta el directorio raíz del proyecto donde se encuentra el archivo package.json.
+
+
+2. Ejecuta el siguiente comando para ejecutar las pruebas con Jest:
+
+```
+npm run test
+```
