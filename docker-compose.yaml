@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=my-database
+      - POSTGRES_USER=db-username
+      - POSTGRES_PASSWORD=db-password
+
+  micro-product-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3002:3002
+    environment:
+      - AWS_ACCESS_KEY_ID=your-access-key
+      - AWS_SECRET_ACCESS_KEY=your-secret-access-key
+      - DB_DIALECT=postgres
+      - DB_DRIVER=postgres
+      - DB_HOST=db
+      - DB_NAME=my-database
+      - DB_PASSWORD=db-password
+      - DB_PORT=5432
+      - DB_USERNAME=db-username
+      - ENCRYPTION_KEY_SECRET=encryption-key
+      - MICRO_SERVICE_URL=http://microservice-url
+      - S3_BUCKET_NAME=my-bucket
+    depends_on:
+      - db
